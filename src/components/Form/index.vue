@@ -51,26 +51,54 @@ watch(() => showErrorModal.value, (val) => {
       if (errorModalRef.value && errorModalRef.value.modalRef) {
         const modalEl = errorModalRef.value.modalRef;
 
-        // GSAP animation
-        gsap.from(modalEl, {
-          y: -200,
-          opacity: 0,
-          scale: 0.8,
-          duration: 0.6,
-          ease: "bounce.out"
-        });
-
-        gsap.to(modalEl, {
-          x: 20,
-          duration: 0.1,
-          repeat: -1,
-          yoyo: true,
-          ease: "power1.inOut"
-        });
+        onErrorAnimation(modalEl);
       }
     });
   }
 });
+
+function onSuccessAnimation() {
+  const centerX = window.innerWidth / 2;
+  const centerY = window.innerHeight / 2;
+  const emoji = "💎";
+  for (let i = 0; i < 50; i++) {
+    const el = document.createElement("div");
+    el.innerText = emoji;
+    el.style.position = "fixed";
+    el.style.left = `${centerX}px`;
+    el.style.top = `${centerY}px`;
+    el.style.fontSize = `${Math.random() * 24 + 16}px`;
+    document.body.appendChild(el);
+
+    gsap.to(el, {
+      x: (Math.random() - 0.5) * 400,
+      y: (Math.random() - 0.5) * 400,
+      rotation: Math.random() * 720,
+      opacity: 0,
+      duration: 5,
+      ease: "power1.out",
+      onComplete: () => el.remove()
+    });
+  }
+}
+
+function onErrorAnimation(modalEl: HTMLElement) {
+  gsap.from(modalEl, {
+    y: -200,
+    opacity: 0,
+    scale: 0.8,
+    duration: 0.6,
+    ease: "bounce.out"
+  });
+
+  gsap.to(modalEl, {
+    x: 20,
+    duration: 0.1,
+    repeat: -1,
+    yoyo: true,
+    ease: "power1.inOut"
+  });
+}
 
 function handleInput(e: Event) {
   const target = e.target as HTMLInputElement;
@@ -114,29 +142,8 @@ function handleSubmit(ev: Event) {
 
   const result = submit(inputValue.value);
   helperText.value = result!.message;
-  if (result!.success) {
-    const centerX = window.innerWidth / 2;
-    const centerY = window.innerHeight / 2;
-    const emoji = "💎";
-    for (let i = 0; i < 50; i++) {
-      const el = document.createElement("div");
-      el.innerText = emoji;
-      el.style.position = "fixed";
-      el.style.left = `${centerX}px`;
-      el.style.top = `${centerY}px`;
-      el.style.fontSize = `${Math.random() * 24 + 16}px`;
-      document.body.appendChild(el);
-
-      gsap.to(el, {
-        x: (Math.random() - 0.5) * 400,
-        y: (Math.random() - 0.5) * 400,
-        rotation: Math.random() * 720,
-        opacity: 0,
-        duration: 5,
-        ease: "power1.out",
-        onComplete: () => el.remove()
-      });
-    }
+  if (result && result.success) {
+    onSuccessAnimation();
   }
 }
 
