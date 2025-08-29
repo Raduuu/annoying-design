@@ -2,7 +2,7 @@
   <form @submit.prevent="handleSubmit">
     <p class="helper">{{ helperText }}</p>
     <Input 
-      :inputValue 
+      v-model="inputValue" 
       @handle-input="handleInput" 
       class="form-input"
       @paste.prevent
@@ -16,7 +16,7 @@
       Submit
     </Button>
 
-    <ErrorModal ref="errorModalRef" :show-error="showErrorModal" @close-error-modal="closeErrorModal" />
+    <ModalError ref="errorModalRef" :show-error="showErrorModal" @close-error-modal="closeErrorModal" />
   </form>
 </template>
 
@@ -25,7 +25,7 @@ import { nextTick, ref, watch } from 'vue';
 import { shiftLastChar } from '../../utils/index';
 import Button from '../Button/index.vue';
 import Input from '../Input/index.vue';
-import ErrorModal from '../ErrorModal/index.vue';
+import ModalError from '../ModalError/index.vue';
 
 let inputValue = ref('Type here...');
 
@@ -89,7 +89,7 @@ function handleInput(e: Event) {
 function submit(inputText: string): {success: boolean; message: string} | undefined {
   try {
     if (inputText.toLowerCase() === correctPhrase.toLowerCase()) {
-      return { success: true, message: "🎉 Success! You cracked it!" };
+      return { success: true, message: "Success!" };
     } else {
       failCount.value++;
 

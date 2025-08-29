@@ -7,10 +7,7 @@
 </template>
 
 <script lang="ts" setup>
-
-const { inputValue } = defineProps<{
-    inputValue: string,
-}>();
+const inputValue = defineModel<string>();
 
 const emit = defineEmits<{
   (e: 'handle-input', event: Event): void
@@ -18,5 +15,7 @@ const emit = defineEmits<{
 
 function handleInput(e: Event) {
   emit('handle-input', e);
+  const target = e.target as HTMLInputElement;
+  inputValue.value = target.value;
 }
 </script>
